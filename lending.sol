@@ -16,6 +16,8 @@ interface LendingPool
     // address onBehalfOf,
     uint16 referralCode
   ) external;
+
+  function withdraw(address asset, uint256 amount, address to) external;
 }
 
 contract lendingFund
@@ -24,16 +26,30 @@ contract lendingFund
     LendingPoolAddressesProvider provider = LendingPoolAddressesProvider(address(0x88757f2f99175387aB4C6a4b3067c77A695b0349)); 
     LendingPool lendingPool = LendingPool(provider.getLendingPool());
 
-    address daiAddress = address(0xFf795577d9AC8bD7D90Ee22b6C1703490b6512FD); 
+    address linkAddress = address(0xFf795577d9AC8bD7D90Ee22b6C1703490b6512FD); 
     uint256 amount = 1000;
     uint16 referral = 0;
+    uint depositAmount;
+    address User;
 
-
-    function depositFunde(uint256 amount) external
+    constructor(address _user)
     {
-            IERC20(daiAddress).approve(provider.getLendingPool(), amount);
+        User = _user;
+    }
+     
 
-            lendingPool.deposit(daiAddress, amount, referral);
+
+    function depositFunde(uint256 _amount) external
+    {
+            depositAmount = amount;
+            IERC20(linkAddress).approve(provider.getLendingPool(), depositAmount);
+
+            lendingPool.deposit(linkAddress, amount, referral);
+    }
+
+    function withdrawFund() external
+    {
+        lendingPool.withdraw(linkAddress, depositAmount, User);
     }
 
    
